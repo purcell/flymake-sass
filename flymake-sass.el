@@ -28,7 +28,6 @@
 ;; buffer-local
 
 (defun flymake-sass-just-find-all-matches (str &optional ignored)
-  (message "*** patched split")
   (let ((result nil))
     (dolist (pattern flymake-sass-err-line-patterns)
       (let ((regex (car pattern))
