@@ -11,6 +11,7 @@
 ;;   (add-hook 'sass-mode-hook 'flymake-sass-load)
 (require 'flymake)
 
+;;; Code:
 
 (defconst flymake-sass-err-line-patterns
   '(("^Syntax error on line \\([0-9]+\\): \\(.*\\)$" nil 1 nil 2)
@@ -20,6 +21,7 @@
 
 ;; Invoke utilities with '-c' to get syntax checking
 (defun flymake-sass-init ()
+  "Construct a command that flymake can use to check sass source."
   (list "sass" (list "-c" (flymake-init-create-temp-buffer-copy
                            'flymake-create-temp-inplace))))
 
@@ -28,6 +30,12 @@
 ;; buffer-local
 
 (defun flymake-sass-just-find-all-matches (str &optional ignored)
+  "A judicious override for `flymake-split-output'.
+
+Enabled by the advice below, this override just returns all
+output lines matching any of the error line patterns.
+
+Argument STR a multi-line string containing output from 'sass -c'."
   (let ((result nil))
     (dolist (pattern flymake-sass-err-line-patterns)
       (let ((regex (car pattern))
@@ -44,9 +52,9 @@
 
 (defadvice flymake-split-output
   (around flymake-sass-split-output-multiline (output) activate protect)
+  "Override `flymake-split-output' to support mult-line error messages."
   (if flymake-sass--split-multiline
-      (flet ((flymake-split-string 'flymake-sass-just-find-all-matches))
-        (setq ad-return-value (list (flymake-sass-just-find-all-matches output) nil)))
+    (setq ad-return-value (list (flymake-sass-just-find-all-matches output) nil))
     ad-do-it))
 
 ;;;###autoload
@@ -54,8 +62,8 @@
   "Configure flymake mode to check the current buffer's sass syntax.
 
 This function is designed to be called in `sass-mode-hook'; it
-does not alter flymake's global configuration, so `flymake-mode'
-alone will not suffice."
+does not alter flymake's global configuration, so function
+`flymake-mode' alone will not suffice."
   (interactive)
   (set (make-local-variable 'flymake-allowed-file-name-masks) '(("." flymake-sass-init)))
   (set (make-local-variable 'flymake-err-line-patterns) flymake-sass-err-line-patterns)
