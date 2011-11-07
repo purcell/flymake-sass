@@ -19,11 +19,19 @@
     ("^Syntax error: \\(.*\\)\r?\n        on line \\([0-9]+\\) of .*?$" nil 2 nil 1) ;; Older sass versions
     ))
 
+(defun flymake-sass--create-temp-in-system-tempdir (file-name prefix)
+  "Return a temporary file name into which flymake can save buffer contents.
+
+This is tidier than `flymake-create-temp-inplace', and therefore
+preferable when the checking doesn't depend on the file's exact
+location."
+  (make-temp-file (or prefix "flymake-sass") nil ".sass"))
+
 ;; Invoke utilities with '-c' to get syntax checking
 (defun flymake-sass-init ()
   "Construct a command that flymake can use to check sass source."
   (list "sass" (list "-c" (flymake-init-create-temp-buffer-copy
-                           'flymake-create-temp-inplace))))
+                           'flymake-sass--create-temp-in-system-tempdir))))
 
 ;; SASS error output is multiline, and in irregular formats, so we have to hack
 ;; flymake-split-output. The hack is activated in `flymake-sass-load', and is
