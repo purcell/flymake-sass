@@ -81,5 +81,10 @@ does not alter flymake's global configuration, so function
     (message "Not enabling flymake: sass command not found")))
 
 
+(defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+  (setq flymake-check-was-interrupted t))
+(ad-activate 'flymake-post-syntax-check)
+
+
 (provide 'flymake-sass)
 ;;; flymake-sass.el ends here
