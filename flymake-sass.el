@@ -10,6 +10,7 @@
 ;; Usage:
 ;;   (require 'flymake-sass)
 ;;   (add-hook 'sass-mode-hook 'flymake-sass-load)
+;;   (add-hook 'scss-mode-hook 'flymake-sass-load)
 ;;
 ;; Uses flymake-easy, from https://github.com/purcell/flymake-easy
 
@@ -26,7 +27,10 @@
 ;; Invoke utilities with '-c' to get syntax checking
 (defun flymake-sass-command (filename)
   "Construct a command that flymake can use to check sass source."
-  (list "sass" "-c" filename))
+  (append '("sass" "-c")
+          (when (eq 'scss-mode major-mode)
+            (list "--scss"))
+          (list filename)))
 
 ;;;###autoload
 (defun flymake-sass-load ()
