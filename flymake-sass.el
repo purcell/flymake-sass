@@ -1,4 +1,4 @@
-;;; flymake-sass.el --- Flymake handler for sass files
+;;; flymake-sass.el --- Flymake handler for sass and scss files
 ;;
 ;;; Author: Steve Purcell <steve@sanityinc.com>
 ;;; URL: https://github.com/purcell/flymake-sass
