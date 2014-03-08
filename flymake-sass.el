@@ -29,7 +29,7 @@
   "Construct a command that flymake can use to check sass source."
   (append '("sass" "-c")
           (when (eq 'scss-mode major-mode)
-            (list "--scss"))
+            (cons "--scss" scss-sass-options))
           (list filename)))
 
 ;;;###autoload
