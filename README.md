@@ -21,7 +21,7 @@ Add the following to your emacs init file:
     (add-hook 'sass-mode-hook 'flymake-sass-load)
 
 [marmalade]: http://marmalade-repo.org
-[melpa]: http://melpa.milkbox.net
+[melpa]: http://melpa.org
 
 <hr>
 
